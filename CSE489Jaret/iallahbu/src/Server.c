@@ -308,9 +308,11 @@ void server_loop() {
 
 	char Msg[255];
 
-
+	
 
 	while (1) {
+
+	printf("TOP OF LOOP");
 
 		memcpy(&watch_list, &master_list, sizeof(master_list));
 
@@ -470,9 +472,15 @@ void server_loop() {
 
 							char DataToSend[]= "LIST";
 
-							send(fdaccept,DataToSend,sizeof(DataToSend),0);
+							if (send(fdaccept,DataToSend,sizeof(DataToSend),0)){
 
-							AddClient("120394-0-","BALLSBALLS",fdaccept,atoi(DataR));
+								send(fdaccept,DataToSend,sizeof(DataToSend),0);
+
+								AddClient("120394-0-","BALLSBALLS",fdaccept,atoi(DataR));
+
+								printf("CLIENT ADDED");
+
+								}
 
 					}
 
