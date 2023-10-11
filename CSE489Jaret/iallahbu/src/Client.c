@@ -1,5 +1,5 @@
 #include <stdio.h>
-
+#FUCK THIS STUPID CLASS
 #include <stdlib.h>
 
 #include <sys/socket.h>
