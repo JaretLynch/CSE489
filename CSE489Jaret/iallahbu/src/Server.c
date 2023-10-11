@@ -64,7 +64,7 @@ Clients List[5];
 
 
 
-int AddClient(char ip[30], char Name[30], int LP, int FD) {
+int AddClient(char ip[], char Name[], int LP, int FD) {
 
 	Clients ClientToAdd;
 
@@ -416,29 +416,63 @@ void server_loop() {
 
 									}
 
-					/* Check if new client is requesting connection */
+						/* Check if new client is requesting connection */
 
-					else if(sock_index == server_socket){
+						else if(sock_index == server_socket){
 
-						caddr_len = sizeof(client_addr);
+							caddr_len = sizeof(client_addr);
 
-						fdaccept = accept(server_socket, (struct sockaddr *)&client_addr, &caddr_len);
+							fdaccept = accept(server_socket, (struct sockaddr *)&client_addr, &caddr_len);
 
-						if(fdaccept < 0)
+							if(fdaccept < 0)
 
-							perror("Accept failed.");
-
-						
-
-						printf("\nRemote Host connected!\n");                        
+								perror("Accept failed.");
 
 						
 
-						/* Add to watched socket list */
+							printf("\nRemote Host connected!\n");                        
 
-						FD_SET(fdaccept, &master_list);
+							char client_ip[INET_ADDRSTRLEN];
 
-						if(fdaccept > head_socket) head_socket = fdaccept;
+							inet_ntop(AF_INET, &client_addr.sin_addr, client_ip, sizeof(client_ip));
+
+
+
+							char client_hostname[256];
+
+							printf("Client IP: %s\n", client_ip);
+
+							printf("Client Hostname: %s\n", client_hostname);
+
+							/* Add to watched socket list */
+
+							FD_SET(fdaccept, &master_list);
+
+							if(fdaccept > head_socket) {
+
+							
+
+								head_socket = fdaccept;
+
+								}
+
+							char DataR[30];
+
+							int bytes_received = recv(fdaccept, DataR, sizeof(DataR),0);
+
+							if (bytes_received > 0) {
+
+								DataR[bytes_received] = '\0';
+
+								printf("Received from Client: %s\n", DataR);
+
+							}
+
+							char DataToSend[]= "LIST";
+
+							send(fdaccept,DataToSend,sizeof(DataToSend),0);
+
+							AddClient("120394-0-","BALLSBALLS",fdaccept,atoi(DataR));
 
 					}
 
