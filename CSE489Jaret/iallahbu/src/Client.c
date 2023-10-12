@@ -1,5 +1,5 @@
 #include <stdio.h>
-#FUCK THIS STUPID CLASS
+
 #include <stdlib.h>
 
 #include <sys/socket.h>
@@ -84,7 +84,7 @@ void close_connection(int client_fd) {
 
 void login_to_server(const char* server_ip, int server_port) {
 
-
+	printf("\nLOGIN CALLED]\n");
 
 	int sockfd;
 
@@ -142,7 +142,21 @@ void login_to_server(const char* server_ip, int server_port) {
 
         // Receive data from the server if needed.
 
-        char received_data[1024];
+        
+
+        char *DataToSend;
+
+	DataToSend = (char*) malloc(255*sizeof(char));
+
+        strcpy(DataToSend,"MESSAGESEND");
+
+        if (send(sockfd,DataToSend,sizeof(DataToSend),0)>0);
+
+		printf("DATA SENT");
+
+        char *received_data;
+
+        received_data = (char*) malloc(255*sizeof(char));
 
         int bytes_received = recv(sockfd, received_data, sizeof(received_data),0);
 
@@ -156,21 +170,21 @@ void login_to_server(const char* server_ip, int server_port) {
 
 
 
-	// Send some message to server indicating login (depends on your protocol)
+	// Send some message to server indicating login (depends on your protocol
 
-	char DataToSend[]="9099";
+	else {
 
-	send(sockfd,DataToSend,sizeof(DataToSend),0);
+		(printf("BYTES RECEIVED <=0"));
 
-	printf("DATA SENT");
-
-	
+		}
 
 	// Receive list of logged-in clients and buffered messages
 
 	// Logic to handle received data here
 
 	close(sockfd);
+
+	printf("SOCKET CLOSED");
 
 	}
 
@@ -236,11 +250,7 @@ void login_to_server(const char* server_ip, int server_port) {
 
 		}
 
-		
-
-		
-
-	char login[6];
+	char *login = (char*) malloc(sizeof(char)*6);		
 
 	strncpy(login,msg,5);
 
@@ -250,13 +260,15 @@ void login_to_server(const char* server_ip, int server_port) {
 
 	if (strcmp(login,"LOGIN")==0){
 
-		
+		char *Cport;
+
+		char *IP;
+
+		Cport = (char*) malloc(30*sizeof(char));
+
+		IP = (char*) malloc(30*sizeof(char));
 
 		printf("LOGIN detected");
-
-		char IP[30];
-
-		char Cport[30];
 
 		int count=0;
 
@@ -320,11 +332,7 @@ void login_to_server(const char* server_ip, int server_port) {
 
 		
 
-		Cport[strlen(Cport)-1]= '\0';
-
 		int Portlen= strlen(Cport);
-
-		Cport[strlen(Cport)-1]= '\0';
 
 		Portlen= strlen(Cport);
 
