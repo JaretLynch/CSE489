@@ -148,7 +148,7 @@ void login_to_server(const char* server_ip, int server_port) {
 
 	DataToSend = (char*) malloc(255*sizeof(char));
 
-        strcpy(DataToSend,"MESSAGESEND");
+        strcpy(DataToSend,"\nIM TRYING TO Login");
 
         if (send(sockfd,DataToSend,sizeof(DataToSend),0)>0);
 
@@ -181,8 +181,6 @@ void login_to_server(const char* server_ip, int server_port) {
 	// Receive list of logged-in clients and buffered messages
 
 	// Logic to handle received data here
-
-	close(sockfd);
 
 	printf("SOCKET CLOSED");
 
