@@ -468,15 +468,15 @@ void server_loop() {
 
 							
 
-							printf("DATA RRRRR");
-
-							char DataR[30];
+							char *Datar = (char*) malloc(sizeof(char)*256);*/
 
 							int bytes_received = recv(fdaccept, DataR, sizeof(DataR),0);
 
-							printf("RECEIVING");
+						
 
 							if (bytes_received > 0) {
+
+								printf("received %d bytes of data", bytes_received);
 
 								DataR[bytes_received] = '\0';
 
