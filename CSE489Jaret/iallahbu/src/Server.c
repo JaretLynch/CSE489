@@ -306,13 +306,13 @@ void remove_connection(int socket) {
 
 void server_loop() { 
 
-	char Msg[255];
+	
+
+	'\0';
 
 	
 
 	while (1) {
-
-	printf("TOP OF LOOP");
 
 		memcpy(&watch_list, &master_list, sizeof(master_list));
 
@@ -324,15 +324,23 @@ void server_loop() {
 
 		
 
-		char *msg = (char*) malloc(sizeof(char)*256);
+/*		char *msg = (char*) malloc(sizeof(char)*256);*/
 
-		
+/*	*/
+
+/*		fgets(msg, 256, stdin); // read from stdin*/
+
+/*	*/
+
+/*		msg[strlen(msg)-1]= '\0';*/
 
 		if(selret < 0)
 
 			perror("select failed.\n");
 
 		if(selret > 0){
+
+		printf("MOUSE");
 
 			/* Loop through socket descriptors to check which ones are ready */
 
@@ -458,9 +466,15 @@ void server_loop() {
 
 								}
 
+							
+
+							printf("DATA RRRRR");
+
 							char DataR[30];
 
 							int bytes_received = recv(fdaccept, DataR, sizeof(DataR),0);
+
+							printf("RECEIVING");
 
 							if (bytes_received > 0) {
 
