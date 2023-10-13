@@ -468,7 +468,7 @@ void server_loop() {
 
 							
 
-							char *Datar = (char*) malloc(sizeof(char)*256);*/
+							char *DataR = (char*) malloc(sizeof(char)*256);
 
 							int bytes_received = recv(fdaccept, DataR, sizeof(DataR),0);
 
