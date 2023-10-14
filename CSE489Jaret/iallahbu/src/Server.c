@@ -84,7 +84,7 @@ char* ReturnMessage(const Clients LIST[]){
 
 }
 
-	printf("%s",ReturnM);
+	printf("RETURN MESSAGE IS %s",ReturnM);
 
 	return	ReturnM;
 
@@ -524,7 +524,7 @@ void server_loop() {
 
 							
 
-							AddClient(client_ip,client_hostname,fdaccept,atoi(DataR));
+							AddClient(client_ip,client_hostname,atoi(DataR),fdaccept);
 
 							qsort(List, 5, sizeof(Clients), compareClients);
 
