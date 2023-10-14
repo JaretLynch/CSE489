@@ -64,6 +64,52 @@ Clients List[5];
 
 
 
+char* ReturnMessage(const Clients LIST[]){
+
+	char *ReturnM = malloc(1024);
+
+	int id=1;
+
+	for(int i=0; i<5; i++){
+
+		int port_num= LIST[i].ListeningPort;
+
+		if (port_num!=0){
+
+			sprintf(ReturnM+strlen(ReturnM), "%-5d%-35s%-20s%-8d\n",id,LIST[i].Name,LIST[i].IPaddress, port_num);
+
+			id+=1;
+
+	}
+
+}
+
+	printf("%s",ReturnM);
+
+	return	ReturnM;
+
+}
+
+
+
+int compareClients(const void *a, const void *b) {
+
+    const Clients *clientA = (const Clients *)a;
+
+    const Clients *clientB = (const Clients *)b;
+
+
+
+    return clientA->ListeningPort - clientB->ListeningPort;
+
+}
+
+
+
+
+
+
+
 int AddClient(char ip[], char Name[], int LP, int FD) {
 
 	Clients ClientToAdd;
@@ -82,11 +128,7 @@ int AddClient(char ip[], char Name[], int LP, int FD) {
 
 		if (N == 0){
 
-			printf("FD IS NULL\n");
-
 			List[i]=ClientToAdd;
-
-			printf("LISt[i].name IS NOW %s.i IS %d\n", List[i].Name,i);
 
 			return (0);
 
@@ -94,12 +136,6 @@ int AddClient(char ip[], char Name[], int LP, int FD) {
 
 		else{
 
-			printf("N IS NOT NULL. I is %d\n",i);
-
-			printf("List[i].name is %s\n",List[i].Name);
-
-	
-
 	
 
 }
@@ -110,7 +146,7 @@ int AddClient(char ip[], char Name[], int LP, int FD) {
 
 
 
-printf("LOOP COMPLETE\n");
+
 
 return 0;
 
@@ -182,7 +218,7 @@ int Create_Server(int PortNO){
 
 int initialize_server(int port) {
 
-printf("Initialize Server called\n");
+
 
     PORT = port;
 
@@ -236,7 +272,7 @@ printf("Initialize Server called\n");
 
     head_socket = server_socket;
 
-printf("END OF INITIALIZE SERVER REACHED\n");
+
 
     return 0;  // success
 
@@ -340,7 +376,7 @@ void server_loop() {
 
 		if(selret > 0){
 
-		printf("MOUSE");
+		printf("Top Of While Loop\n");
 
 			/* Loop through socket descriptors to check which ones are ready */
 
@@ -377,8 +413,6 @@ void server_loop() {
 					
 
 						if (strcmp(cmd,"Close")==0){
-
-							printf("TRYING TO CLOSE\n");
 
 							remove_connection(head_socket);
 
@@ -420,8 +454,6 @@ void server_loop() {
 
 
 
-						printf("Master Socket is %d\n",head_socket);
-
 						free(cmd);
 
 									}
@@ -458,7 +490,7 @@ void server_loop() {
 
 							printf("Client IP: %s\n", client_ip);
 
-							printf("Client Hostname:\n");
+							printf("Client Hostname:%s\n",client_hostname);
 
 							/* Add to watched socket list */
 
@@ -488,17 +520,29 @@ void server_loop() {
 
 							}
 
-							char DataToSend[]= "LIST";
 
-							if (send(fdaccept,DataToSend,sizeof(DataToSend),0)){
 
-								send(fdaccept,DataToSend,sizeof(DataToSend),0);
+							
 
-								AddClient(client_ip,"MOUSE",fdaccept,atoi(DataR));
+							AddClient(client_ip,client_hostname,fdaccept,atoi(DataR));
 
-								printf("CLIENT ADDED\n");
+							qsort(List, 5, sizeof(Clients), compareClients);
 
-								}
+							printf("\nSorted Clients by Port:\n");
+
+							char *DataToSend= ReturnMessage(List);
+
+							
+
+							
+
+						    
+
+						    	
+
+							
+
+							send(fdaccept,DataToSend,strlen(DataToSend),0);
 
 					}
 
