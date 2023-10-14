@@ -172,17 +172,9 @@ void login_to_server(const char* server_ip, int server_port) {
 
 	while(bytes_received<=0){
 
-		int bytes_received = recv(sockfd, DataR, strlen(DataR),0);	
+		int bytes_received = recv(sockfd, DataR, 1023,0);	
 
 		}
-
-	if (bytes_received > 0) {
-
-            DataR[bytes_received] = '\0';
-
-            printf("Received from server: %s\n", DataR);
-
-	}
 
 	DataR[bytes_received] = '\0';
 
