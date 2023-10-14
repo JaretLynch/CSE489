@@ -74,11 +74,11 @@ char* ReturnMessage(const Clients LIST[]){
 
 	
 
-		int port_num= LIST[i].ListeningPort;
+		int port_num= List[i].ListeningPort;
 
 		
 
-		printf("RETURN MESSAGE IS %s and LIST[i].LIstening Port is %d\n",port_num);
+		printf("RETURN MESSAGE IS %s and LIST[i].LIstening Port is %d\n",ReturnM,port_num);
 
 		if (port_num!=0){
 
