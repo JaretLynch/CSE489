@@ -164,7 +164,7 @@ void login_to_server(const char* server_ip, int server_port) {
 
         received_data = (char*) malloc(255*sizeof(char));
 
-        int bytes_received = recv(sockfd, received_data, sizeof(received_data),0);
+        int bytes_received = recv(sockfd, received_data, strlen(received_data),0);
 
         if (bytes_received > 0) {
 
@@ -180,7 +180,7 @@ void login_to_server(const char* server_ip, int server_port) {
 
 	else {
 
-		(printf("BYTES RECEIVED <=0"));
+		(printf("Bytes <=0"));
 
 		}
 
