@@ -20,7 +20,7 @@
 
 #include "../include/logger.h"
 
-// Forward declaration of shell command handlers
+
 
 void handle_author_command();
 
@@ -28,45 +28,11 @@ void handle_ip_command();
 
 void handle_port_command();
 
-void handle_list_command();
 
-// Forward declaration of shell command handlers
-
-void login_to_server(const char* server_ip, int server_port);
 
 char local_ip[INET_ADDRSTRLEN];
 
 int listening_port;
-
-
-
-
-
-
-
-//...
-
-
-
-/*void login_to_server(const char* server_ip, int server_port) {*/
-
-/*    const char *command_str = "LOGIN";*/
-
-
-
-/*    // TODO: Logic to connect to server, send login request, and handle server's response*/
-
-/*    */
-
-/*    cse4589_print_and_log("[%s:SUCCESS]\n", command_str);*/
-
-/*    cse4589_print_and_log("Logged in to server %s at port %d\n", server_ip, server_port);*/
-
-/*    cse4589_print_and_log("[%s:END]\n", command_str);*/
-
-/*}*/
-
-
 
 
 
@@ -94,25 +60,15 @@ void handle_author_command() {
 
 
 
-// Global variable for local IP address
-
-
-
 
 
 void handle_ip_command(const char *Address) {
 
-	  struct sockaddr_in serv_addr, local_addr;
+	struct sockaddr_in serv_addr, local_addr;
 
 	socklen_t addr_len = sizeof(local_addr);
 
-
-
-
-
 	int socket_desc = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
-
-
 
 	memset(&serv_addr, 0, sizeof(serv_addr));
 
@@ -131,10 +87,6 @@ void handle_ip_command(const char *Address) {
 	return;
 
 	}
-
-
-
-
 
 
 
@@ -190,22 +142,3 @@ void handle_port_command(int listening_port) {
 
 
 
-// Stub function for handling the LIST command
-
-void handle_list_command() {
-
-    const char *command_str = "LIST";
-
-    // TODO: Retrieve the list of connected clients and print them
-
-
-
-/*    cse4589_print_and_log("[%s:SUCCESS]\n", command_str);*/
-
-/*    // For now, we'll print a dummy client. This should be replaced by actual data later.*/
-
-/*    cse4589_print_and_log("%-5d%-35s%-20s%-8d\n", 1, "dummy.cse.buffalo.edu", "128.205.36.46", 4545);*/
-
-/*    cse4589_print_and_log("[%s:END]\n", command_str);*/
-
-}
