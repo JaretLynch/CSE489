@@ -328,25 +328,27 @@ int accept_new_connection() {
 
 void remove_connection(int socket) {
 
-    close(socket);
+	close(socket);
 
-    FD_CLR(socket, &master_list);
+	FD_CLR(socket, &master_list);
 
+	for (int i = 0; i < 5; i++) {
 
+	if (List[i].FD == socket) {
+
+	    List[i].FD = -1; // Set the FD to an invalid value (0 in this case)
+
+	}
+
+}
 
 }
 
 
 
-
-
 void server_loop() { 
 
-	
 
-	'\0';
-
-	
 
 	while (1) {
 
@@ -382,11 +384,27 @@ void server_loop() {
 
 					if (sock_index == STDIN){
 
+						char *cmd = (char*) malloc(sizeof(char)*CMD_SIZE);
+
+
+
+
+
+
+
+						if(fgets(cmd, CMD_SIZE-1, stdin) == NULL) //Mind the newline character that will be written to cmd
+
+
+
+							exit(-1);
+
+				
+
 						cmd[strlen(cmd)-1]='\0';
 
 
 
-						if (strcmp(cmd,"Close")==0){
+						if (strcmp(cmd,"EXIT")==0){
 
 
 
@@ -407,8 +425,6 @@ void server_loop() {
 						if (strcmp(cmd,"AUTHOR")==0){
 
 
-
-							printf("\n");
 
 
 
@@ -462,7 +478,7 @@ void server_loop() {
 
 						free(cmd);
 
-
+						fflush(stdout);
 
 									}
 
@@ -516,7 +532,7 @@ void server_loop() {
 
 						char *DataR = (char*) malloc(sizeof(char)*256);
 
-						int bytes_received = recv(fdaccept, DataR, strlen(DataR),0);
+						int bytes_received = recv(fdaccept, DataR, 255,0);
 
 						if (bytes_received > 0) {
 
@@ -566,15 +582,11 @@ void server_loop() {
 
 					if(recv(sock_index, NewData, 256, 0) <= 0){
 
-						close(sock_index);
+						remove_connection(sock_index);
 
 						printf("Remote Host terminated connection!\n");
 
 						
-
-						/* Remove from watched list */
-
-						FD_CLR(sock_index, &master_list);
 
 					}
 
