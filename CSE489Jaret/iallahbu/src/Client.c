@@ -136,13 +136,13 @@ void login_to_server(const char* server_ip, int server_port) {
 
 	printf("Logging in !/n");
 
+	ClientFD=sockfd;
+
 	LoggedIn=1;
 
 
 
         // Receive data from the server if needed.
-
-        char *DataToSend;
 
         char MESSAGE[10];
 
@@ -160,31 +160,39 @@ void login_to_server(const char* server_ip, int server_port) {
 
 		}
 
-        char *received_data;
+		
 
-        received_data = (char*) malloc(255*sizeof(char));
+		
 
-        int bytes_received = recv(sockfd, received_data, strlen(received_data),0);
+	char *DataR = (char*) malloc(sizeof(char)*1024);
 
-        if (bytes_received > 0) {
+	int bytes_received = recv(sockfd, DataR, 1023,0);	
 
-            received_data[bytes_received] = '\0';
+        
 
-            printf("Received from server: %s\n", received_data);
+	while(bytes_received<=0){
 
-	}
-
-
-
-	// Send some message to server indicating login (depends on your protocol
-
-	else {
-
-		(printf("Bytes <=0"));
+		int bytes_received = recv(sockfd, DataR, strlen(DataR),0);	
 
 		}
 
+	if (bytes_received > 0) {
 
+            DataR[bytes_received] = '\0';
+
+            printf("Received from server: %s\n", DataR);
+
+	}
+
+	DataR[bytes_received] = '\0';
+
+        printf("Received from server: %s\n", DataR);
+
+	// Send some message to server indicating login (depends on your protocol
+
+	
+
+process_client_commands();
 
 	}
 
@@ -230,6 +238,8 @@ void login_to_server(const char* server_ip, int server_port) {
 
             handle_ip_command();
 
+            free(msg);
+
         } 
 
         
@@ -238,9 +248,11 @@ void login_to_server(const char* server_ip, int server_port) {
 
 			handle_port_command(Portno);
 
+			free(msg);
+
 		}
 
-	if (strcmp(msg,"CLOSE")==0){
+	if (strcmp(msg,"EXIT")==0){
 
 			printf("TRYING TO CLOSE");
 
@@ -250,6 +262,34 @@ void login_to_server(const char* server_ip, int server_port) {
 
 		}
 
+	if ((strcmp(msg,"REFRESH")==0) && (LoggedIn==1)){
+
+        	printf("Sent Data===%s\n",msg);
+
+        	int j=send(ClientFD,msg,strlen(msg),0);
+
+        	char *DataR = (char*) malloc(sizeof(char)*1024);
+
+		int bytes_received = recv(ClientFD, DataR, 1023,0);	
+
+		
+
+		while(bytes_received<=0){
+
+			int bytes_received = recv(ClientFD, DataR, strlen(DataR),0);	
+
+			}
+
+		DataR[bytes_received] = '\0';
+
+        	printf("Received from server: %s\n", DataR);
+
+        	free(msg);
+
+	
+
+	}
+
 	char *login = (char*) malloc(sizeof(char)*6);		
 
 	strncpy(login,msg,5);
@@ -258,7 +298,7 @@ void login_to_server(const char* server_ip, int server_port) {
 
 	
 
-	if (strcmp(login,"LOGIN")==0){
+	if ((strcmp(login,"LOGIN")==0) && (LoggedIn==0)){
 
 		char *Cport;
 
@@ -334,82 +374,14 @@ void login_to_server(const char* server_ip, int server_port) {
 
 		int Portlen= strlen(Cport);
 
-		Portlen= strlen(Cport);
-
-		printf("Length is %d",IPlen);
-
-		printf("\nFINAL IP IS %s",IP);
-
-		printf("\nFINAL LENGTH IS %d\n",IPlen);
-
-		printf("First character is %c\n",IP[0]);
-
-		printf("Last character is %c\n",IP[IPlen-1]);
-
-		
-
-		printf("Length is %d",Portlen);
-
-		printf("\nFINAL Port IS %s",Cport);
-
-		printf("\nFINAL LENGTH IS %d\n",Portlen);
-
-		printf("First character is %c\n",Cport[0]);
-
-		printf("Last character is %c\n",Cport[Portlen-1]);
-
-		
-
 		int PORTN= atoi(Cport);
 
 		login_to_server(IP,PORTN);
+
+		free(msg);
 
 		}
 
 			}
 
-/*	else if (strcmp(msg, "LOGIN") == 0) {*/
-
-/*            char server_ip[100];*/
-
-/*            int server_port;*/
-
-/*          sscanf(buffer, "LOGIN %s %d", server_ip, &server_port);*/
-
-/*            login_to_server(server_ip, server_port);*/
-
-/*        }*/
-
-        // ... and so on for other commands
-
-    }
-
-
-
-
-
-/*int main(int argc, char *argv[]) {*/
-
-/*    // Initialization or setup code, if any...*/
-
-/*    char host[256];*/
-
-/*    struct hostent *host_entry;*/
-
-/*    gethostname(host, sizeof(host));*/
-
-/*    host_entry = gethostbyname(host);*/
-
-/*    strcpy(local_ip, inet_ntoa(*((struct in_addr*) host_entry->h_addr_list[0])));*/
-
-
-
-
-
-/*    process_client_commands(); // This will start your command loop*/
-
-
-
-/*    return 0; // Return successful exit status*/
-
-/*}*/
+}
