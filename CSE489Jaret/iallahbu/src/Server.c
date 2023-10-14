@@ -74,7 +74,7 @@ void remove_connection(int socket) {
 
 		if (List[i].FD == socket) {
 
-	    	List[i].ListeningPort = -1; 
+	    	List[i].ListeningPort = 0; 
 
 	    	List[i].FD == 0;
 
@@ -480,6 +480,8 @@ void server_loop() {
 
 						FD_SET(fdaccept, &master_list);
 
+						
+
 						if(fdaccept > head_socket) {
 
 						
@@ -496,11 +498,11 @@ void server_loop() {
 
 						if (bytes_received > 0) {
 
-							printf("received %d bytes of data\n", bytes_received);
+					
 
 							DataR[bytes_received] = '\0';
 
-							printf("Received from Client: %s\n", DataR);
+					
 
 						}
 
@@ -550,11 +552,7 @@ void server_loop() {
 
 							
 
-							printf("\nClient sent me: %s\n", NewData);
-
 							if (strlen(NewData) > 0) {
-
-								printf("received %ld bytes of data\n", strlen(NewData));
 
 								DataR[strlen(NewData)-1] = '\0';
 
