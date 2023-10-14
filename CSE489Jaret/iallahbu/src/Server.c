@@ -38,11 +38,11 @@ fd_set master_list, watch_list;
 
 int head_socket, selret, sock_index, fdaccept=0, caddr_len;
 
-int PORT = 8080;  // default port, this can be set during server init
+int PORT = 8080;
 
-char buffer[1025];
+char buffer[256];
 
-/*int main(int argc, char *argv[]) {*/
+
 
 
 
@@ -64,6 +64,28 @@ Clients List[5];
 
 
 
+void remove_connection(int socket) {
+
+	close(socket);
+
+	FD_CLR(socket, &master_list);
+
+	for (int i = 0; i < 5; i++) {
+
+		if (List[i].FD == socket) {
+
+	    	List[i].ListeningPort = -1; 
+
+	    	List[i].FD == 0;
+
+	}
+
+}
+
+}
+
+
+
 char* ReturnMessage(const Clients LIST[]){
 
 	char *ReturnM = malloc(1024);
@@ -78,8 +100,6 @@ char* ReturnMessage(const Clients LIST[]){
 
 		
 
-		printf("RETURN MESSAGE IS %s and LIST[i].LIstening Port is %d\n",ReturnM,port_num);
-
 		if (port_num!=0){
 
 			sprintf(ReturnM+strlen(ReturnM), "%-5d%-35s%-20s%-8d\n",id,LIST[i].Name,LIST[i].IPaddress, port_num);
@@ -89,8 +109,6 @@ char* ReturnMessage(const Clients LIST[]){
 	}
 
 }
-
-	printf("RETURN MESSAGE IS %s <------\n",ReturnM);
 
 	return	ReturnM;
 
@@ -103,8 +121,6 @@ int compareClients(const void *a, const void *b) {
     const Clients *clientA = (const Clients *)a;
 
     const Clients *clientB = (const Clients *)b;
-
-
 
     return clientA->ListeningPort - clientB->ListeningPort;
 
@@ -140,19 +156,7 @@ int AddClient(char ip[], char Name[], int LP, int FD) {
 
 		}
 
-		else{
-
-	
-
 }
-
-
-
-}
-
-
-
-
 
 return 0;
 
@@ -168,27 +172,19 @@ int Create_Server(int PortNO){
 
     	int port = PortNO; 
 
-	if (1 > 1) {
+
+
+	if (port <= 0) {
+
+	    printf("Error: Invalid port number provided.\n");
+
+	    return 1;
+
+	}
 
 
 
-		port = 42;
-
-		if (port <= 0) {
-
-		    printf("Error: Invalid port number provided.\n");
-
-		    return 1;
-
-		}
-
-	    }
-
-
-
-
-
-	    if (initialize_server(port) < 0) {
+    	if (initialize_server(port) < 0) {
 
 		printf("Error: Server initialization failed.\n");
 
@@ -196,17 +192,17 @@ int Create_Server(int PortNO){
 
 	    }
 
-	    else{
+	else{
 
-	    PORT=port;
+	PORT=port;
 
 
 
-	    server_loop();
+	server_loop();
 
-	    }
+	}
 
-	    return 0;  
+	return 0;  
 
 	}
 
@@ -316,31 +312,7 @@ int accept_new_connection() {
 
     
 
-    
-
     return new_socket;
-
-}
-
-
-
-
-
-void remove_connection(int socket) {
-
-	close(socket);
-
-	FD_CLR(socket, &master_list);
-
-	for (int i = 0; i < 5; i++) {
-
-	if (List[i].FD == socket) {
-
-	    List[i].FD = -1; // Set the FD to an invalid value (0 in this case)
-
-	}
-
-}
 
 }
 
@@ -354,6 +326,8 @@ void server_loop() {
 
 		memcpy(&watch_list, &master_list, sizeof(master_list));
 
+		
+
 		int STDIN= fileno(stdin);
 
 
@@ -362,13 +336,15 @@ void server_loop() {
 
 		
 
-		if(selret < 0)
+		if(selret < 0){
 
 			perror("select failed.\n");
 
+			}
+
 		if(selret > 0){
 
-		printf("Top Of While Loop\n");
+
 
 			/* Loop through socket descriptors to check which ones are ready */
 
@@ -384,21 +360,21 @@ void server_loop() {
 
 					if (sock_index == STDIN){
 
+					
+
 						char *cmd = (char*) malloc(sizeof(char)*CMD_SIZE);
 
 
 
+						if(fgets(cmd, CMD_SIZE-1, stdin) == NULL){ //Mind the newline character that will be written to cmd
 
+							printf("[EXIT:SUCCESS]\n");
 
-
-
-						if(fgets(cmd, CMD_SIZE-1, stdin) == NULL) //Mind the newline character that will be written to cmd
-
-
+							printf("[EXIT:END]\n");
 
 							exit(-1);
 
-				
+						}
 
 						cmd[strlen(cmd)-1]='\0';
 
@@ -418,13 +394,7 @@ void server_loop() {
 
 						}
 
-
-
-
-
-						if (strcmp(cmd,"AUTHOR")==0){
-
-
+						else if (strcmp(cmd,"AUTHOR")==0){
 
 
 
@@ -434,9 +404,7 @@ void server_loop() {
 
 						}
 
-
-
-						if (strcmp(cmd,"IP")==0){
+						else if (strcmp(cmd,"IP")==0){
 
 
 
@@ -446,55 +414,47 @@ void server_loop() {
 
 						}
 
-
-
-						
-
-
-
-						if (strcmp(cmd,"PORT")==0){
+						else if (strcmp(cmd,"PORT")==0){
 
 
 
 							handle_port_command(PORT);
 
-
+							
 
 						}
-
-
 
 						else{
 
 
 
-							printf("MESSAGE:%s\n",cmd);
+							printf("[%s:ERROR]\n",cmd);
 
 
 
 							}
 
-
-
 						free(cmd);
 
 						fflush(stdout);
 
-									}
+					}
 
 					
 
 					else if(sock_index == server_socket){
 
+					
+
 						caddr_len = sizeof(client_addr);
 
 						fdaccept = accept(server_socket, (struct sockaddr *)&client_addr, &caddr_len);
 
-						if(fdaccept < 0)
+						if(fdaccept < 0){
 
 							perror("Accept failed.");
 
-					
+						}
 
 						printf("\nRemote Host connected!\n");                        
 
@@ -526,7 +486,7 @@ void server_loop() {
 
 							head_socket = fdaccept;
 
-							}
+						}
 
 						
 
@@ -554,81 +514,75 @@ void server_loop() {
 
 						char *DataToSend= ReturnMessage(List);
 
-						printf("DATA TO SEND IS %s",DataToSend);
-
-						
-
-					    
-
-					    	
-
 						fflush(stdout);
 
 						send(fdaccept,DataToSend,strlen(DataToSend),0);
 
-				}
+					}
 
 				/* Read from existing clients */
 
-				else{
+					else{
 
-					/* Initialize buffer to receieve response */
+						/* Initialize buffer to receieve response */
 
-					char *NewData = (char*) malloc(sizeof(char)*256);
+						char *NewData = (char*) malloc(sizeof(char)*256);
 
-					memset(NewData, '\0', 256);
-
-					
-
-					if(recv(sock_index, NewData, 256, 0) <= 0){
-
-						remove_connection(sock_index);
-
-						printf("Remote Host terminated connection!\n");
+						memset(NewData, '\0', 256);
 
 						
 
-					}
+						if(recv(sock_index, NewData, 256, 0) <= 0){
 
-					else {
+							remove_connection(sock_index);
 
-						char *DataR = (char*) malloc(sizeof(char)*256);
+							printf("Remote Host terminated connection!\n");
 
-						//Process incoming data from existing clients here ...
-
-						
-
-						printf("\nClient sent me: %s\n", NewData);
-
-						if (strlen(NewData) > 0) {
-
-							printf("received %ld bytes of data\n", strlen(NewData));
-
-							DataR[strlen(NewData)-1] = '\0';
-
-							printf("Received from Client: %s\n", DataR);
+							
 
 						}
 
-						if (strcmp(NewData,"REFRESH")==0){
+						else {
 
-							char *DataToSend= ReturnMessage(List);
+							char *DataR = (char*) malloc(sizeof(char)*256);
 
-							send(sock_index,DataToSend,strlen(DataToSend),0);
+							//Process incoming data from existing clients here ...
 
-						fflush(stdout);
+							
+
+							printf("\nClient sent me: %s\n", NewData);
+
+							if (strlen(NewData) > 0) {
+
+								printf("received %ld bytes of data\n", strlen(NewData));
+
+								DataR[strlen(NewData)-1] = '\0';
+
+								printf("Received from Client: %s\n", DataR);
+
+							}
+
+							if (strcmp(NewData,"REFRESH")==0){
+
+								char *DataToSend= ReturnMessage(List);
+
+								send(sock_index,DataToSend,strlen(DataToSend),0);
+
+								fflush(stdout);
+
+							}
 
 						
 
-					}
-
 					
 
-				
+						}
 
 					}
 
 				}
+
+			
 
 			}
 
@@ -636,6 +590,4 @@ void server_loop() {
 
 	}
 
-	
-
-}}
+}
