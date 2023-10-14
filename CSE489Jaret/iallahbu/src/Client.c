@@ -134,7 +134,7 @@ void login_to_server(const char* server_ip, int server_port) {
 
 	else{
 
-	printf("LOG THE FUCK IN\n ");
+	printf("Logging in !/n");
 
 	LoggedIn=1;
 
@@ -150,13 +150,9 @@ void login_to_server(const char* server_ip, int server_port) {
 
 	sprintf(MESSAGE, "%d", Portno);
 
-        char hostname[256];
+        printf("Sent Data===%s\n",MESSAGE);
 
-        gethostname(hostname,sizeof(hostname));
-
-        printf("Sent Data===%s\n",hostname);
-
-        int j=send(sockfd,MESSAGE,strlen(DataToSend),0);
+        int j=send(sockfd,MESSAGE,strlen(MESSAGE),0);
 
         if (j>0){
 
