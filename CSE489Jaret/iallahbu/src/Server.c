@@ -72,7 +72,13 @@ char* ReturnMessage(const Clients LIST[]){
 
 	for(int i=0; i<5; i++){
 
+	
+
 		int port_num= LIST[i].ListeningPort;
+
+		
+
+		printf("RETURN MESSAGE IS %s and LIST[i].LIstening Port is %d\n",port_num);
 
 		if (port_num!=0){
 
@@ -84,7 +90,7 @@ char* ReturnMessage(const Clients LIST[]){
 
 }
 
-	printf("RETURN MESSAGE IS %s",ReturnM);
+	printf("RETURN MESSAGE IS %s <------\n",ReturnM);
 
 	return	ReturnM;
 
@@ -527,8 +533,6 @@ void server_loop() {
 							AddClient(client_ip,client_hostname,atoi(DataR),fdaccept);
 
 							qsort(List, 5, sizeof(Clients), compareClients);
-
-							printf("\nSorted Clients by Port:\n");
 
 							char *DataToSend= ReturnMessage(List);
 
