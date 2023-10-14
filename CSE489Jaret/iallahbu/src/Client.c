@@ -3,6 +3,7 @@
 #include <stdlib.h>
 
 #include <sys/socket.h>
+
 #include <strings.h>
 
 #include <string.h>
@@ -185,15 +186,15 @@ void process_client_commands() {
 
 		char *login = (char*) malloc(sizeof(char)*6);		
 
+
+
+		fgets(msg, 256, stdin);
+
+		msg[strlen(msg)-1]= '\0';
+
 		strncpy(login,msg,5);
 
 		login[5] = '\0' ;
-
-
-
-		fgets(msg, 256, stdin); 
-
-		msg[strlen(msg)-1]= '\0';
 
 		if (strcmp(msg, "AUTHOR") == 0) {
 
