@@ -134,15 +134,7 @@ void login_to_server(const char* server_ip, int server_port) {
 
 		sprintf(MESSAGE, "%d", Portno);
 
-		printf("Sent Data===%s\n",MESSAGE);
-
-		int j=send(ClientFD,MESSAGE,strlen(MESSAGE),0);
-
-		if (j>0){
-
-			printf("DATA SENT, %d bytes",j);
-
-			}	
+		int j=send(ClientFD,MESSAGE,strlen(MESSAGE),0);	
 
 		char *DataR = (char*) malloc(sizeof(char)*1024);
 
