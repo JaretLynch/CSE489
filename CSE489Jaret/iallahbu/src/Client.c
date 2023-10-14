@@ -158,7 +158,7 @@ void login_to_server(const char* server_ip, int server_port) {
 
 		DataR[bytes_received] = '\0';
 
-		printf("Received from server: %s\n", DataR);
+		printf("%s\n", DataR);
 
 		process_client_commands();
 
@@ -242,7 +242,11 @@ void process_client_commands() {
 
 			DataR[bytes_received] = '\0';
 
+			printf("[REFRESH:SUCCESS]\n");
+
 			printf("%s\n", DataR);
+
+			printf("[REFRESH:END]\n");
 
 			free(msg);
 
