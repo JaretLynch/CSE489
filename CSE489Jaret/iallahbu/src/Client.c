@@ -142,17 +142,27 @@ void login_to_server(const char* server_ip, int server_port) {
 
         // Receive data from the server if needed.
 
-        
-
         char *DataToSend;
 
-	DataToSend = (char*) malloc(255*sizeof(char));
+        char MESSAGE[10];
 
-        strcpy(DataToSend,"\nIM TRYING TO Login");
 
-        if (send(sockfd,DataToSend,sizeof(DataToSend),0)>0);
 
-		printf("DATA SENT");
+	sprintf(MESSAGE, "%d", Portno);
+
+        char hostname[256];
+
+        gethostname(hostname,sizeof(hostname));
+
+        printf("Sent Data===%s\n",hostname);
+
+        int j=send(sockfd,MESSAGE,strlen(DataToSend),0);
+
+        if (j>0){
+
+		printf("DATA SENT, %d bytes",j);
+
+		}
 
         char *received_data;
 
@@ -178,11 +188,7 @@ void login_to_server(const char* server_ip, int server_port) {
 
 		}
 
-	// Receive list of logged-in clients and buffered messages
 
-	// Logic to handle received data here
-
-	printf("SOCKET CLOSED");
 
 	}
 
