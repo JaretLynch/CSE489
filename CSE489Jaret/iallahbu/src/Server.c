@@ -382,21 +382,91 @@ void server_loop() {
 
 					if (sock_index == STDIN){
 
-						char *cmd = (char*) malloc(sizeof(char)*CMD_SIZE);
+						cmd[strlen(cmd)-1]='\0';
 
-						memset(cmd, '\0', CMD_SIZE);
 
-						if(fgets(cmd, CMD_SIZE-1, stdin) == NULL) {
+
+						if (strcmp(cmd,"Close")==0){
+
+
+
+							remove_connection(head_socket);
+
+
 
 							exit(-1);
 
-							}
 
-						cmd[strlen(cmd)-1]='\0';		
+
+						}
+
+
+
+
+
+						if (strcmp(cmd,"AUTHOR")==0){
+
+
+
+							printf("\n");
+
+
+
+							handle_author_command();
+
+
+
+						}
+
+
+
+						if (strcmp(cmd,"IP")==0){
+
+
+
+							handle_ip_command();
+
+
+
+						}
+
+
 
 						
 
-				}
+
+
+						if (strcmp(cmd,"PORT")==0){
+
+
+
+							handle_port_command(PORT);
+
+
+
+						}
+
+
+
+						else{
+
+
+
+							printf("MESSAGE:%s\n",cmd);
+
+
+
+							}
+
+
+
+						free(cmd);
+
+
+
+									}
+
+					
 
 					else if(sock_index == server_socket){
 
