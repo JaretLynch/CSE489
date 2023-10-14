@@ -24,7 +24,7 @@
 
 #include "Server.h"
 
-
+#include <netdb.h>
 
 #define CMD_SIZE 100
 
@@ -444,15 +444,21 @@ void server_loop() {
 
 							char client_ip[INET_ADDRSTRLEN];
 
+							char client_hostname[256];
+
+							getnameinfo((struct sockaddr *)&client_addr, sizeof(client_addr), client_hostname, sizeof(client_hostname), NULL, 0, 0);
+
 							inet_ntop(AF_INET, &client_addr.sin_addr, client_ip, sizeof(client_ip));
 
+							
 
+			
 
-							char client_hostname[256];
+							
 
 							printf("Client IP: %s\n", client_ip);
 
-							printf("Client Hostname: %s\n", client_hostname);
+							printf("Client Hostname:\n");
 
 							/* Add to watched socket list */
 
@@ -472,11 +478,9 @@ void server_loop() {
 
 							int bytes_received = recv(fdaccept, DataR, sizeof(DataR),0);
 
-						
-
 							if (bytes_received > 0) {
 
-								printf("received %d bytes of data", bytes_received);
+								printf("received %d bytes of data\n", bytes_received);
 
 								DataR[bytes_received] = '\0';
 
@@ -490,9 +494,9 @@ void server_loop() {
 
 								send(fdaccept,DataToSend,sizeof(DataToSend),0);
 
-								AddClient("120394-0-","BALLSBALLS",fdaccept,atoi(DataR));
+								AddClient(client_ip,"MOUSE",fdaccept,atoi(DataR));
 
-								printf("CLIENT ADDED");
+								printf("CLIENT ADDED\n");
 
 								}
 
